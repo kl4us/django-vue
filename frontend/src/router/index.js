@@ -27,18 +27,11 @@ const router = createRouter({
       name: 'register',
       component: RegistrationView,      
     },         
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    },    
     { 
-      // otherwise redirect to home
+      // otherwise redirect to NotFoundView
       path: '/:pathMatch(.*)*', 
-      redirect: '/' 
+      name: 'notfound',
+      component: () => import('@/views/NotFoundView.vue')
     }    
   ],
   linkActiveClass: "active"

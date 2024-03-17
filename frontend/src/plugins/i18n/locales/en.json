@@ -3,5 +3,6 @@
     "register": "Register",
     "no_account": "Do not have an account?",
     "already_have_account": "Already have an account?",
-    "logout": "Logout"
+    "logout": "Logout",
+    "page_not_found": "Page not found!"
 }
