@@ -22,6 +22,7 @@ source venv/bin/activate
 pip install -r requirements
 python manage.py migrate
 python manage.py createsuperuser
+python manage.py runserver
 ```
 
 ## FRONTEND: Vue.js
