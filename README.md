@@ -9,6 +9,10 @@ This Django application use
 - djoser for user authentication
 - SQLite database
 
+### Prerequisites
+
+  - python3.9+ and virtualenv 
+
 ### How to start
 
 ```bash
@@ -30,6 +34,10 @@ This Vue.js application use
 - vue-router for routing SPA
 - bootstrap for the style
 
+### Prerequisites
+
+  - node.js v18.18.2
+  
 ### How to start
 
 ```bash
