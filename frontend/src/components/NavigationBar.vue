@@ -1,7 +1,3 @@
-<script setup>
-import { RouterLink } from 'vue-router'
-</script>
-
 <template>
 
     <!-- Fixed navbar -->
@@ -18,15 +14,49 @@ import { RouterLink } from 'vue-router'
                             <i class="bi bi-house-door-fill"></i>
                         </RouterLink>
                     </li>
-                    <li class="nav-item">
-                        <RouterLink to="/login" class="nav-link">Login</RouterLink>
+                    <li class="nav-item" v-if="!isAuthenticated">
+                        <RouterLink to="/login" class="nav-link">{{ $t('login') }}</RouterLink>
                     </li>
-                    <li class="nav-item">
-                        <RouterLink to="/register" class="nav-link">Register</RouterLink>
-                    </li>            
+                    <li class="nav-item" v-if="!isAuthenticated">
+                        <RouterLink to="/register" class="nav-link">{{ $t('register') }}</RouterLink>
+                    </li>                          
+                    <div class="dropdown" v-if="isAuthenticated">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" 
+                            role="button" 
+                            data-bs-toggle="dropdown" 
+                            aria-haspopup="true" 
+                            aria-expanded="false"
+                        >
+                            {{ username }}
+                        </a>                        
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" href="#" @click="handleLogout">{{ $t('logout') }}</a>
+                            </li>                                                     
+                        </ul>
+                    </div>                                           
                 </ul>         
             </div>
         </div>
     </nav>    
 
 </template>
+
+<script setup>
+    import { computed } from 'vue';
+    import { useRouter } from 'vue-router';
+    import { useAuthStore } from '@/stores/auth.store';
+
+    const router = useRouter();
+    const authStore = useAuthStore();
+
+    const isAuthenticated = computed(() => authStore.isAuthenticated);
+    const username = computed(() => authStore.username);
+
+    const handleLogout = () => {
+        authStore.handleLogout();
+        // Redirect to the login page after logout
+        router.push('/');
+    };
+</script>
+
