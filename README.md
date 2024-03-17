@@ -1,10 +1,15 @@
-# BACKEND: Django
+# Django and Vue.js starter template
+
+Starter template for projects based on Django framework as backend and Vue.js as frontend. 
+Used for this template Django 4.2 and Vue.js 3
+
+## BACKEND: Django
 
 This Django application use 
 - djoser for user authentication
 - SQLite database
 
-## How to start
+### How to start
 
 ```bash
 cd backend
@@ -15,9 +20,9 @@ python manage.py migrate
 python manage.py createsuperuser
 ```
 
-# FRONTEND: Vue.js
+## FRONTEND: Vue.js
 
-This Django application use 
+This Vue.js application use 
 - Pinia for state management
 - js-cookie for cookies
 - axios for API call
@@ -25,7 +30,7 @@ This Django application use
 - vue-router for routing SPA
 - bootstrap for stuling
 
-## How to start
+### How to start
 
 ```bash
 cd frontend
