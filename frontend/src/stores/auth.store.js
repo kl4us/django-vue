@@ -13,8 +13,8 @@ export const useAuthStore = defineStore({
     async handleLogin(username, password) {
       try {
         const response = await axios.post('/auth/jwt/create/', {
-          username,
-          password,
+          username: username,
+          password: password,
         });
         const { access, refresh } = response.data;
         this.token = access;
@@ -43,7 +43,7 @@ export const useAuthStore = defineStore({
         this.username = username
        
         Cookies.set('username', username, { secure: true, sameSite: 'strict' });
-        return this.username;
+        
       } catch (error) {
         console.error('getting current user fails', error);
         throw error;
