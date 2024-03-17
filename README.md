@@ -28,7 +28,7 @@ This Vue.js application use
 - axios for API call
 - vue-i18n for internazionalitation
 - vue-router for routing SPA
-- bootstrap for stuling
+- bootstrap for the style
 
 ### How to start
 
