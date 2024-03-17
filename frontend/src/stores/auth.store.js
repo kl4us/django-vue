@@ -7,97 +7,85 @@ export const useAuthStore = defineStore({
   state: () => ({    
     username: null,
     token: null,
-    refreshToken: null
+    refreshToken: null,
+    isAuthenticated: false
   }),
   actions: {
-    async handleLogin(username, password) {
-      try {
-        const response = await axios.post('/auth/jwt/create/', {
-          username: username,
-          password: password,
-        });
-        const { access, refresh } = response.data;
-        this.token = access;
-        this.refreshToken = refresh;
-        this.username = username
-        this.isAuthenticated = true;
-        
-        Cookies.set('authToken', access, { secure: true, sameSite: 'strict' });
-        Cookies.set('refreshToken', refresh, { secure: true, sameSite: 'strict' });
-        Cookies.set('username', username, { secure: true, sameSite: 'strict' });
-
-        // Set token in axios headers
-        axios.defaults.headers.common['Authorization'] = `JWT ${this.token}`;
-
-        this.handleCurrentUser();
-        this.startRefreshTokenTimer();
-      } catch (error) {
-        console.error('Login failed:', error);
-        throw error;
-      }
-    },
-    async handleCurrentUser() {
-      try {
-        const response = await axios.get('/auth/users/me/', {});
-        const { username } = response.data;
-        this.username = username
-       
-        Cookies.set('username', username, { secure: true, sameSite: 'strict' });
-        
-      } catch (error) {
-        console.error('getting current user fails', error);
-        throw error;
-      }
+    setAuthCookie(name, value) {
+      Cookies.set(name, value, { secure: true, sameSite: 'strict' });
     },    
-    async handleLogout() {
-      this.stopRefreshTokenTimer();
+    getAuthCookie(name) {
+      return Cookies.get(name);
+    },
+    removeAuthCookie(name) {
+      Cookies.remove(name);
+    },
+    setAuthentication(payload) {
+      this.token = payload.access;
+      this.refreshToken = payload.refresh;
+      this.isAuthenticated = true;
 
-      this.token = null;
-      this.refreshToken = null;
-      this.isAuthenticated = false;
-      this.username = null;
+      this.setAuthCookie('authToken', this.token, { secure: true, sameSite: 'strict' });
+      this.setAuthCookie('refreshToken', this.refreshToken, { secure: true, sameSite: 'strict' });  
       
-      // remove from cookies
-      Cookies.remove('authToken');
-      Cookies.remove('refreshToken');
-      Cookies.remove('username');
+      // Set jwt in axios headers
+      axios.defaults.headers.common['Authorization'] = `JWT ${this.token}`;
+
+      if (this.isAuthenticated && !this.username) {
+        this.handleRefreshUsername();
+      }
+
+      // start timer to refresh jwt
+      this.startRefreshTokenTimer();
+    },
+    setUsername(payload) {
+      this.username = payload.username;
+    },    
+    async refreshAuthentication(payload) {
+      this.token = payload.access;
+      this.isAuthenticated = true;
+
+      this.setAuthCookie('authToken', this.token, { secure: true, sameSite: 'strict' });
       
-      // Remove token from axios headers
-      delete axios.defaults.headers.common['Authorization'];
+      // Set jwt in axios headers
+      axios.defaults.headers.common['Authorization'] = `JWT ${this.token}`;
+
+      // start timer to refresh jwt
+      this.startRefreshTokenTimer();
+    },    
+    async handleRefreshUsername() {
+      try {
+          const response = await axios.get('/auth/users/me/', {});
+          const payload = response.data;
+          this.setUsername(payload);                            
+      } catch (error) {
+          console.error('getting current user fails', error);
+          // on error clear state
+          this.clearAuthentication();
+          throw error;
+      }  
     },
     async handleRefreshToken() {
+      console.log('refresh token');
       try {
-        this.refreshToken = Cookies.get('refreshToken');
+        this.refreshToken = this.getAuthCookie('refreshToken');
       
         if (this.refreshToken) {
           
           const response = await axios.post('/auth/jwt/refresh/', {
             refresh: this.refreshToken,
           });
-          const { access } = response.data;
-          this.token = access;
-          this.isAuthenticated = true;
-
-          Cookies.set('authToken', access, { secure: true, sameSite: 'strict' });
-
-          // Update token in axios headers
-          axios.defaults.headers.common['Authorization'] = `JWT ${this.token}`;
-
-          this.handleCurrentUser();
-          this.startRefreshTokenTimer();
+          
+          const payload = response.data;
+          this.refreshAuthentication(payload);
         }
-        
+        if (this.isAuthenticated && !this.username) {
+          this.handleRefreshUsername();
+        }
       } catch (error) {
         console.error('Failed to refresh token:', error);
-
-        // remove from cookies
-        Cookies.remove('authToken');
-        Cookies.remove('refreshToken');
-        Cookies.remove('username');
-
-        // Remove token from axios headers
-        delete axios.defaults.headers.common['Authorization'];
-
+        // on error clear state
+        this.clearAuthentication();
         throw error;
       }
     },
@@ -106,7 +94,7 @@ export const useAuthStore = defineStore({
       const jwtBase64 = this.token.split('.')[1];
       const jwtToken = JSON.parse(atob(jwtBase64));
 
-      // set a timeout to refresh the token a minute before it expires
+      // set a timeout to refresh the jwt a minute before it expires
       const expires = new Date(jwtToken.exp * 1000);
       const timeout = expires.getTime() - Date.now() - (60 * 1000);
 
@@ -116,6 +104,20 @@ export const useAuthStore = defineStore({
     },    
     stopRefreshTokenTimer() {
       clearTimeout(this.refreshTokenTimeout);
+    },
+    clearAuthentication () {
+      // stop timer to refresh jwt
+      this.stopRefreshTokenTimer();
+
+      // Remove token from axios headers
+      delete axios.defaults.headers.common['Authorization'];
+
+      // remove from cookies
+      this.removeAuthCookie('authToken');
+      this.removeAuthCookie('refreshToken');
+      // this.removeAuthCookie('username');  
+      
+      this.$reset();
     }      
-  },
+  }
 });

@@ -50,6 +50,7 @@
     import { defineComponent, ref } from 'vue';
     import { useRoute } from 'vue-router';
     import router from '@/router'
+    import axios from 'axios';
     import { useAuthStore } from '@/stores/auth.store';
 
     export default defineComponent({
@@ -83,17 +84,22 @@
                     delete errors.value.password;
                 }         
 
-                if (Object.keys(errors.value).length === 0) {
+                if (Object.keys(errors.value).length === 0) {                    
                     try {
-                        await authStore.handleLogin(username.value, password.value);                
-                       
-                        // Redirect to dashboard or handle login success
-                        router.push(route.query.returnUrl || '/');
+                        const response = await axios.post('/auth/jwt/create/', {
+                            username: username.value,
+                            password: password.value,
+                        });
+                        const payload = response.data;
+                        authStore.setAuthentication(payload);
+
                     } catch (error) {
                         console.error('Login failed:', error);
-                        // Handle login error
-                        errors.value.login_failed = true;
-                    }
+                        throw error;
+                    }                                               
+                                            
+                    // Redirect to dashboard or handle login success
+                    router.push(route.query.returnUrl || '/');                   
                 }
             };
 
