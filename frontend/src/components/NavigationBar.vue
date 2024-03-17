@@ -13,7 +13,7 @@
                         <RouterLink to="/" class="nav-link">
                             <i class="bi bi-house-door-fill"></i>
                         </RouterLink>
-                    </li>
+                    </li>                                        
                     <li class="nav-item" v-if="!isAuthenticated">
                         <RouterLink to="/login" class="nav-link">{{ $t('login') }}</RouterLink>
                     </li>
@@ -34,7 +34,8 @@
                                 <a class="dropdown-item" href="#" @click="handleLogout">{{ $t('logout') }}</a>
                             </li>                                                     
                         </ul>
-                    </div>                                           
+                    </div>   
+                    <LanguageSwitcher />                                                            
                 </ul>         
             </div>
         </div>
@@ -46,6 +47,7 @@
     import { computed } from 'vue';
     import { useRouter } from 'vue-router';
     import { useAuthStore } from '@/stores/auth.store';
+    import LanguageSwitcher from '@/plugins/i18n/LanguageSwitcher.vue';
 
     const router = useRouter();
     const authStore = useAuthStore();
