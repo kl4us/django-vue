@@ -27,7 +27,7 @@
                             aria-haspopup="true" 
                             aria-expanded="false"
                         >
-                            {{ username }}
+                        <i class="bi bi-person-fill"></i> {{ username }}
                         </a>                        
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li>
@@ -56,9 +56,11 @@
     const username = computed(() => authStore.username);
 
     const handleLogout = () => {
-        authStore.handleLogout();
+        // clear authentication state
+        authStore.clearAuthentication();
+
         // Redirect to the login page after logout
-        router.push('/');
+        router.push('/');           
     };
 </script>
 
