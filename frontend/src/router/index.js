@@ -51,11 +51,9 @@ const router = createRouter({
   linkActiveClass: "active"
 })
 
-
-
 router.beforeEach(async (to) => {
+  const authStore = useAuthStore();
   if (to.meta.requiresAuth) {    
-    const authStore = useAuthStore();
     if (!authStore.isAuthenticated){
       return {
         path: '/login',
@@ -64,5 +62,8 @@ router.beforeEach(async (to) => {
     }
   }
 });
+
+
+
 
 export default router
