@@ -4,5 +4,8 @@
     "no_account": "Do not have an account?",
     "already_have_account": "Already have an account?",
     "logout": "Logout",
-    "page_not_found": "Page not found!"
+    "page_not_found": "Page not found!",
+    "password_change": "Change Password",
+    "password_reset": "Reset Password",
+    "save": "Save"
 }

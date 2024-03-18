@@ -4,5 +4,8 @@
     "no_account": "Non hai un account?",
     "already_have_account": "Hai già un account?",
     "logout": "Esci"    ,
-    "page_not_found": "Pagina non trovata!"
+    "page_not_found": "Pagina non trovata!",
+    "password_change": "Cambia Password",
+    "password_reset": "Reset Password",
+    "save": "Salva"
 }

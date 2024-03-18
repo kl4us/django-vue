@@ -31,6 +31,9 @@
                         </a>                        
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li>
+                                <RouterLink to="/password-change" class="dropdown-item">{{ $t('password_change') }}</RouterLink>
+                            </li>                              
+                            <li>
                                 <a class="dropdown-item" href="#" @click="handleLogout">{{ $t('logout') }}</a>
                             </li>                                                     
                         </ul>
