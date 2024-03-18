@@ -18,9 +18,9 @@ startApp();
 async function startApp () {
     const app = createApp(App);
 
-    app.use(createPinia());
-    app.use(router);
-
+    const pinia = createPinia()
+    app.use(pinia);
+    
     setupI18n(app)
 
     axios.defaults.baseURL = import.meta.env.VITE_API_URL;
@@ -30,9 +30,10 @@ async function startApp () {
         const authStore = useAuthStore();
         await authStore.handleRefreshToken();     
     } catch {
-        // catch error to start app on success or failure
+        // catch error on failure
         console.log('error in refreshing token')
     }
 
+    app.use(router);
     app.mount('#app');
 }
