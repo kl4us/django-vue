@@ -2,30 +2,31 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
+function setAuthCookie(name, value) {
+  Cookies.set(name, value, { secure: true, sameSite: 'strict' });
+}    
+function getAuthCookie(name) {
+  return Cookies.get(name);
+}
+function removeAuthCookie(name) {
+  Cookies.remove(name);
+}
+
 export const useAuthStore = defineStore({
   id: 'auth',
   state: () => ({    
     token: null,
-    refreshToken: null,
+    refreshToken: getAuthCookie('refreshToken') || null,
     isAuthenticated: false
   }),
+ 
   actions: {
-    setAuthCookie(name, value) {
-      Cookies.set(name, value, { secure: true, sameSite: 'strict' });
-    },    
-    getAuthCookie(name) {
-      return Cookies.get(name);
-    },
-    removeAuthCookie(name) {
-      Cookies.remove(name);
-    },
     setAuthentication(payload) {
       this.token = payload.access;
       this.refreshToken = payload.refresh;
       this.isAuthenticated = true;
 
-      this.setAuthCookie('authToken', this.token, { secure: true, sameSite: 'strict' });
-      this.setAuthCookie('refreshToken', this.refreshToken, { secure: true, sameSite: 'strict' });  
+      setAuthCookie('refreshToken', this.refreshToken, { secure: true, sameSite: 'strict' }); 
       
       // Set jwt in axios headers
       axios.defaults.headers.common['Authorization'] = `JWT ${this.token}`;
@@ -37,8 +38,6 @@ export const useAuthStore = defineStore({
       this.token = payload.access;
       this.isAuthenticated = true;
 
-      this.setAuthCookie('authToken', this.token, { secure: true, sameSite: 'strict' });
-      
       // Set jwt in axios headers
       axios.defaults.headers.common['Authorization'] = `JWT ${this.token}`;
 
@@ -46,7 +45,8 @@ export const useAuthStore = defineStore({
       this.startRefreshTokenTimer();
     },
     async handleRefreshToken() {
-      this.refreshToken = this.getAuthCookie('refreshToken');
+      console.log('refresh token')
+      this.refreshToken = getAuthCookie('refreshToken');
       if (this.refreshToken) {                            
         await axios
           .post('/auth/jwt/refresh/', {
@@ -87,8 +87,7 @@ export const useAuthStore = defineStore({
       delete axios.defaults.headers.common['Authorization'];
 
       // remove from cookies
-      this.removeAuthCookie('authToken');
-      this.removeAuthCookie('refreshToken');
+      removeAuthCookie('refreshToken');
       
       this.$reset();
     }      
