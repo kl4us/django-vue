@@ -5,7 +5,6 @@ import Cookies from 'js-cookie';
 export const useAuthStore = defineStore({
   id: 'auth',
   state: () => ({    
-    username: null,
     token: null,
     refreshToken: null,
     isAuthenticated: false
@@ -31,16 +30,9 @@ export const useAuthStore = defineStore({
       // Set jwt in axios headers
       axios.defaults.headers.common['Authorization'] = `JWT ${this.token}`;
 
-      if (this.isAuthenticated && !this.username) {
-        this.handleRefreshUsername();
-      }
-
       // start timer to refresh jwt
       this.startRefreshTokenTimer();
-    },
-    setUsername(payload) {
-      this.username = payload.username;
-    },    
+    },  
     async refreshAuthentication(payload) {
       this.token = payload.access;
       this.isAuthenticated = true;
@@ -52,18 +44,6 @@ export const useAuthStore = defineStore({
 
       // start timer to refresh jwt
       this.startRefreshTokenTimer();
-    },    
-    async handleRefreshUsername() {
-      try {
-          const response = await axios.get('/auth/users/me/', {});
-          const payload = response.data;
-          this.setUsername(payload);                            
-      } catch (error) {
-          console.error('getting current user fails', error);
-          // on error clear state
-          this.clearAuthentication();
-          throw error;
-      }  
     },
     async handleRefreshToken() {
       console.log('refresh token');
@@ -78,9 +58,6 @@ export const useAuthStore = defineStore({
           
           const payload = response.data;
           this.refreshAuthentication(payload);
-        }
-        if (this.isAuthenticated && !this.username) {
-          this.handleRefreshUsername();
         }
       } catch (error) {
         console.error('Failed to refresh token:', error);
@@ -115,7 +92,6 @@ export const useAuthStore = defineStore({
       // remove from cookies
       this.removeAuthCookie('authToken');
       this.removeAuthCookie('refreshToken');
-      // this.removeAuthCookie('username');  
       
       this.$reset();
     }      
