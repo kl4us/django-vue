@@ -102,7 +102,8 @@
                             errors.value.username = error.response.data.username ? error.response.data.username[0] : null;
                             errors.value.password = error.response.data.password ? error.response.data.password[0] : null;
                             errors.value.non_field_errors = error.response.data.detail ? error.response.data.detail : "Login failed!";
-                            throw error;                         
+                            console.error('error during login:', error)
+                            // throw error;                         
                         });                                 
                 }
             };

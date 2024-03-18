@@ -45,7 +45,6 @@ export const useAuthStore = defineStore({
       this.startRefreshTokenTimer();
     },
     async handleRefreshToken() {
-      console.log('refresh token')
       this.refreshToken = getAuthCookie('refreshToken');
       if (this.refreshToken) {                            
         await axios
@@ -56,10 +55,10 @@ export const useAuthStore = defineStore({
             this.refreshAuthentication(response.data);                                  
           })       
           .catch((error) => {                       
-            console.log('Failed to refresh token:', error);
+            console.error('Failed to refresh token:', error);
             // on error clear state
             this.clearAuthentication();
-            throw error;                     
+            // throw error;                     
           });             
       }     
     },

@@ -104,8 +104,7 @@
                             "new_password": new_password.value,
                             "re_new_password": re_new_password.value,
                         })
-                        .then((response) => {
-                            console.log(response);
+                        .then(() => {                            
                             // Redirect to dashboard or handle login success
                             router.push(route.query.returnUrl || '/');                                  
                         })       
@@ -114,8 +113,8 @@
                             errors.value.new_password = error.response.data.new_password ? error.response.data.new_password[0] : null;
                             errors.value.re_new_password = error.response.data.re_new_password ? error.response.data.re_new_password[0] : null;
                             errors.value.non_field_errors = error.response.data.non_field_errors ? error.response.data.non_field_errors[0] : "Change password failed!";
-                            console.log('error updating password:', error);       
-                            throw error;                         
+                            console.error('error updating password:', error);       
+                            // throw error;                         
                         });                                                                                                                                          
                 }
             };
