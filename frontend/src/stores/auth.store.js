@@ -46,25 +46,22 @@ export const useAuthStore = defineStore({
       this.startRefreshTokenTimer();
     },
     async handleRefreshToken() {
-      console.log('refresh token');
-      try {
-        this.refreshToken = this.getAuthCookie('refreshToken');
-      
-        if (this.refreshToken) {
-          
-          const response = await axios.post('/auth/jwt/refresh/', {
+      this.refreshToken = this.getAuthCookie('refreshToken');
+      if (this.refreshToken) {                            
+        await axios
+          .post('/auth/jwt/refresh/', {
             refresh: this.refreshToken,
-          });
-          
-          const payload = response.data;
-          this.refreshAuthentication(payload);
-        }
-      } catch (error) {
-        console.error('Failed to refresh token:', error);
-        // on error clear state
-        this.clearAuthentication();
-        throw error;
-      }
+          })
+          .then((response) => {                     
+            this.refreshAuthentication(response.data);                                  
+          })       
+          .catch((error) => {                       
+            console.log('Failed to refresh token:', error);
+            // on error clear state
+            this.clearAuthentication();
+            throw error;                     
+          });             
+      }     
     },
     startRefreshTokenTimer() {
       // parse json object from base64 encoded jwt token

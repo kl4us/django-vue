@@ -25,13 +25,17 @@
                                 {{ errors.password }}
                             </div>                              
                         </div>
-                        <div v-if="errors.login_failed" class="alert alert-danger text-center" role="alert">Invalid username or password</div>
+                        <div v-if="errors.non_field_errors" class="alert alert-danger text-center" role="alert"> {{ errors.non_field_errors }} </div>
                         <div class="d-grid col-12 mx-auto">
                             <button class="btn btn-primary" type="submit"><span></span> {{ $t('login') }}</button>
                         </div>
-                        <p class="text-center mt-3">{{ $t('no_account') }}                        
-                            <RouterLink to="/register" class="text-primary link">{{ $t('register') }}</RouterLink>
-                        </p>
+                        <div class="text-center mt-3 mb-3">
+                            <RouterLink to="/password-reset" class="text-primary link">{{ $t('password_reset') }}</RouterLink>
+                            <div class="mt-1">
+                                {{ $t('no_account') }}                        
+                                <RouterLink to="/register" class="text-primary link">{{ $t('register') }}</RouterLink>                                
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -69,7 +73,7 @@
 
             const handleSubmit = async () => {
 
-                delete errors.value.login_failed;
+                delete errors.value.non_field_errors;
 
                 // Validate the form fields
                 if (!username.value) {
@@ -84,22 +88,22 @@
                     delete errors.value.password;
                 }         
 
-                if (Object.keys(errors.value).length === 0) {                    
-                    try {
-                        const response = await axios.post('/auth/jwt/create/', {
+                if (Object.keys(errors.value).length === 0) {                       
+                    await axios
+                        .post('/auth/jwt/create/', {
                             username: username.value,
                             password: password.value,
-                        });
-                        const payload = response.data;
-                        authStore.setAuthentication(payload);
-
-                    } catch (error) {
-                        console.error('Login failed:', error);
-                        throw error;
-                    }                                               
-                                            
-                    // Redirect to dashboard or handle login success
-                    router.push(route.query.returnUrl || '/');                   
+                        })
+                        .then((response) => {                            
+                            authStore.setAuthentication(response.data);
+                            router.push(route.query.returnUrl || '/');                                  
+                        })       
+                        .catch((error) => {                            
+                            errors.value.username = error.response.data.username ? error.response.data.username[0] : null;
+                            errors.value.password = error.response.data.password ? error.response.data.password[0] : null;
+                            errors.value.non_field_errors = error.response.data.detail ? error.response.data.detail : "Login failed!";
+                            throw error;                         
+                        });                                 
                 }
             };
 
