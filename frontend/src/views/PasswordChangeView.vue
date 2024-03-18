@@ -3,7 +3,7 @@
         <div class="rounded d-flex justify-content-center mt-5">
             <div class="col-lg-4 col-md-6 col-sm-12 shadow-lg p-4 bg-light">
                 <div class="text-center">
-                    <h3 class="text-primary">{{ $t('login') }}</h3>                    
+                    <h3 class="text-primary">{{ $t('password_change') }}</h3>                    
                 </div>
                 <div class="mt-4">
                     <form @submit.prevent="handleSubmit">    
