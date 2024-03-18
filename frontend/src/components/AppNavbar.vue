@@ -27,7 +27,7 @@
                             aria-haspopup="true" 
                             aria-expanded="false"
                         >
-                        <i class="bi bi-person-fill"></i> {{ username }}
+                        <i class="bi bi-person-fill"></i>
                         </a>                        
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li>
@@ -53,7 +53,6 @@
     const authStore = useAuthStore();
 
     const isAuthenticated = computed(() => authStore.isAuthenticated);
-    const username = computed(() => authStore.username);
 
     const handleLogout = () => {
         // clear authentication state
