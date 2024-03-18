@@ -20,7 +20,7 @@
                             <span class="input-group-text bg-primary">
                                 <i class="bi bi-key-fill text-white"></i>
                             </span>
-                            <input type="password" class="form-control" :class="{ 'is-invalid' : errors.password}" placeholder="password" id="password" v-model="password">
+                            <input type="password" class="form-control" :class="{ 'is-invalid' : errors.password}" placeholder="Password" id="password" v-model="password">
                             <div v-if="errors.password" id="password-invalid" class="invalid-feedback">
                                 {{ errors.password }}
                             </div>                              

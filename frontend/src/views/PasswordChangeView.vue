@@ -11,7 +11,7 @@
                             <span class="input-group-text bg-primary">
                                 <i class="bi bi-key-fill text-white"></i>
                             </span>
-                            <input type="password" class="form-control" :class="{ 'is-invalid' : errors.current_password}" placeholder="current password" id="current_password" v-model="current_password">
+                            <input type="password" class="form-control" :class="{ 'is-invalid' : errors.current_password}" placeholder="Current password" id="current_password" v-model="current_password">
                             <div v-if="errors.current_password" id="current_password-invalid" class="invalid-feedback">
                                 {{ errors.current_password }}
                             </div>                              
@@ -20,7 +20,7 @@
                             <span class="input-group-text bg-primary">
                                 <i class="bi bi-key-fill text-white"></i>
                             </span>
-                            <input type="password" class="form-control" :class="{ 'is-invalid' : errors.new_password}" placeholder="new password" id="new_password" v-model="new_password">
+                            <input type="password" class="form-control" :class="{ 'is-invalid' : errors.new_password}" placeholder="New password" id="new_password" v-model="new_password">
                             <div v-if="errors.new_password" id="new_password-invalid" class="invalid-feedback">
                                 {{ errors.new_password }}
                             </div>                              
@@ -29,7 +29,7 @@
                             <span class="input-group-text bg-primary">
                                 <i class="bi bi-key text-white"></i>
                             </span>
-                            <input type="password" class="form-control" :class="{ 'is-invalid' : errors.re_new_password}" placeholder="re-type password" id="re-password" v-model="re_new_password">
+                            <input type="password" class="form-control" :class="{ 'is-invalid' : errors.re_new_password}" placeholder="Re-type password" id="re-password" v-model="re_new_password">
                             <div v-if="errors.re_new_password" id="re-password-invalid" class="invalid-feedback">
                                 {{ errors.re_new_password }}
                             </div>                              
