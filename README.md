@@ -35,6 +35,8 @@ This Vue.js application use
 - vue-router for routing SPA
 - bootstrap for the style
 
+In contrast to many examples found online where authentication tokens are often stored in localStorage, in this template, only the refresh token is stored in a secure cookie with SameSite attribute set to strict!
+
 ### Prerequisites
 
   - node.js v18.18.2
