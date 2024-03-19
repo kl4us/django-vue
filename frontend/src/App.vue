@@ -1,17 +1,17 @@
 <script setup>
-  import AppNavbar from '@/components/AppNavbar.vue';
-  import AppFooter from '@/components/AppFooter.vue';
+  import Navbar from '@/components/Navbar.vue';
+  import Footer from '@/components/Footer.vue';
 </script>
 
 <template>
   <header>
-    <AppNavbar /> 
+    <Navbar /> 
   </header>  
   <main class="flex-shrink-0">
     <RouterView />
   </main>
   <footer class="footer mt-auto py-3 bg-light">
-    <AppFooter />
+    <Footer />
   </footer>
 
 </template>
