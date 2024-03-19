@@ -12,19 +12,20 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 
 import { setupI18n } from './plugins/i18n';
 
-startApp();
+axios.defaults.baseURL = import.meta.env.VITE_API_URL;
+
+const app = createApp(App);
+const pinia = createPinia()
+app.use(pinia);
+setupI18n(app)
+
+await checkAuthentication();
+
+app.use(router);
+app.mount('#app');
 
 // async start function to enable waiting for refresh token call
-async function startApp () {
-    const app = createApp(App);
-
-    const pinia = createPinia()
-    app.use(pinia);
-    
-    setupI18n(app)
-
-    axios.defaults.baseURL = import.meta.env.VITE_API_URL;
-
+async function checkAuthentication () {
     // attempt to auto refresh token before startup
     try {
         const authStore = useAuthStore();
@@ -33,7 +34,4 @@ async function startApp () {
         // catch error on failure
         console.log('error in refreshing token')
     }
-
-    app.use(router);
-    app.mount('#app');
 }
