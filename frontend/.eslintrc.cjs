@@ -6,6 +6,9 @@ module.exports = {
     'eslint:recommended'
   ],
   parserOptions: {
-    ecmaVersion: 'latest'
-  }
+    ecmaVersion: 'latest',    
+  },
+  rules: {
+    'vue/multi-word-component-names': 'off',
+  },  
 }
