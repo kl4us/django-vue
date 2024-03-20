@@ -71,31 +71,29 @@
             const handleSubmit = async () => {
 
                 delete errors.value.non_field_errors;
+                delete errors.value.current_password;
+                delete errors.value.new_password;
+                delete errors.value.re_new_password;
+
+                const field_error_message = 'This field may not be blank.';
+                const password_mismatch = 'The two password fields didn\'t match.';
 
                 // Validate the form fields
                 if (!current_password.value) {
-                    errors.value.current_password = 'Please enter current password.';
-                } else {
-                    delete errors.value.current_password;
+                    errors.value.current_password = field_error_message;
                 }
 
                 if (!new_password.value) {
-                    errors.value.password = 'Please enter new password.';
-                } else {
-                    delete errors.value.new_password;
-                }
+                    errors.value.password = field_error_message;
+                } 
 
                 if (!re_new_password.value) {
-                    errors.value.re_new_password = 'Please re-type new password.';
-                } else {
-                    delete errors.value.re_new_password;
-                }   
+                    errors.value.re_new_password = field_error_message;
+                }  
                 
                 if (new_password.value != re_new_password.value) {
-                    errors.value.re_new_password = 'Passwords are not equals.';
-                } else {
-                    delete errors.value.re_new_password;
-                }                
+                    errors.value.re_new_password = password_mismatch;
+                }               
 
                 if (Object.keys(errors.value).length === 0) {                    
                     await axios

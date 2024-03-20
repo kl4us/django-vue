@@ -74,19 +74,18 @@
             const handleSubmit = async () => {
 
                 delete errors.value.non_field_errors;
+                delete errors.value.username;
+                delete errors.value.password;
+                const field_error_message = 'This field may not be blank.';
 
-                // Validate the form fields
+                // // Validate the form fields
                 if (!username.value) {
-                    errors.value.username = 'Please enter your username.';
-                } else {
-                    delete errors.value.username;
+                    errors.value.username = field_error_message;
                 }
 
                 if (!password.value) {
-                    errors.value.password = 'Please enter your password.';
-                } else {
-                    delete errors.value.password;
-                }         
+                    errors.value.password = field_error_message;
+                }      
 
                 if (Object.keys(errors.value).length === 0) {                       
                     await axios
@@ -101,8 +100,8 @@
                         .catch((error) => {                            
                             errors.value.username = error.response.data.username ? error.response.data.username[0] : null;
                             errors.value.password = error.response.data.password ? error.response.data.password[0] : null;
-                            errors.value.non_field_errors = error.response.data.detail ? error.response.data.detail : "Login failed!";
-                            console.error('error during login:', error)
+                            errors.value.non_field_errors = error.response.data.detail || "Login failed!";
+                            console.log('error during login:', error)
                             // throw error;                         
                         });                                 
                 }
