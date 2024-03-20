@@ -2,21 +2,11 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-function setAuthCookie(name, value) {
-  Cookies.set(name, value, { secure: true, sameSite: 'strict' });
-}    
-function getAuthCookie(name) {
-  return Cookies.get(name);
-}
-function removeAuthCookie(name) {
-  Cookies.remove(name);
-}
-
 export const useAuthStore = defineStore({
   id: 'auth',
   state: () => ({    
     token: null,
-    refreshToken: getAuthCookie('refreshToken') || null,
+    refreshToken: Cookies.get('refreshToken') || null,
     isAuthenticated: false
   }),
  
@@ -26,7 +16,7 @@ export const useAuthStore = defineStore({
       this.refreshToken = payload.refresh;
       this.isAuthenticated = true;
 
-      setAuthCookie('refreshToken', this.refreshToken, { secure: true, sameSite: 'strict' }); 
+      Cookies.set('refreshToken', this.refreshToken, { secure: true, sameSite: 'strict' });
       
       // Set jwt in axios headers
       axios.defaults.headers.common['Authorization'] = `JWT ${this.token}`;
@@ -45,7 +35,7 @@ export const useAuthStore = defineStore({
       this.startRefreshTokenTimer();
     },
     async handleRefreshToken() {
-      this.refreshToken = getAuthCookie('refreshToken');
+      this.refreshToken = Cookies.get('refreshToken');
       if (this.refreshToken) {                            
         await axios
           .post('/auth/jwt/refresh/', {
@@ -86,7 +76,7 @@ export const useAuthStore = defineStore({
       delete axios.defaults.headers.common['Authorization'];
 
       // remove from cookies
-      removeAuthCookie('refreshToken');
+      Cookies.remove('refreshToken');
       
       this.$reset();
     }      

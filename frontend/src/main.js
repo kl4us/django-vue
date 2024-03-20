@@ -19,19 +19,8 @@ const pinia = createPinia()
 app.use(pinia);
 setupI18n(app)
 
-await checkAuthentication();
+const authStore = useAuthStore();
+await authStore.handleRefreshToken();    
 
 app.use(router);
 app.mount('#app');
-
-// async start function to enable waiting for refresh token call
-async function checkAuthentication () {
-    // attempt to auto refresh token before startup
-    try {
-        const authStore = useAuthStore();
-        await authStore.handleRefreshToken();     
-    } catch {
-        // catch error on failure
-        console.log('error in refreshing token')
-    }
-}
